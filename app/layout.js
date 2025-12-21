@@ -1,14 +1,18 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import AuthProvider from "@/lib/AuthProvider";
+import Navbar from "@/components/Navbar";
+import { LanguageProvider } from "@/components/LanguageProvider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import { Domine } from "next/font/google";
+import { Toaster } from "sonner";
+import Footer from "@/components/Footer";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const domine = Domine({
+  weight: ["400", "500", "600", "700"], // include the weights you need
+  style: ["normal"],
   subsets: ["latin"],
+  display: "swap",
+  variable: "--font-domine", // optional CSS variable
 });
 
 export const metadata = {
@@ -19,10 +23,15 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${domine.className} antialiased`}>
+        <LanguageProvider>
+          <AuthProvider>
+            <Toaster richColors closeButton/>
+            <Navbar />
+            {children}
+            <Footer/>
+          </AuthProvider>
+        </LanguageProvider>
       </body>
     </html>
   );
