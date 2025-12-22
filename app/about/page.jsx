@@ -1,4 +1,3 @@
-// app/about/page.jsx
 "use client";
 
 import { useLanguage } from "@/components/LanguageProvider";
@@ -15,11 +14,10 @@ import {
 } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
-import FactoryComparison from "@/components/FactoryComparison";
 import { content } from "@/lib/dictionary/aboutData";
 import { CldImage } from "next-cloudinary";
 
-// Counter Component with animation
+/** Counter Component */
 const AnimatedCounter = ({ target, duration = 2 }) => {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
@@ -99,15 +97,29 @@ export default function AboutPage() {
       transition: { duration: 0.7, ease: "easeOut" },
     },
   };
-  const [openCert, setOpenCert] = useState(null);
 
-  // helper
   const certificates = currentContent.sections.certificates.items;
+  const [openCert, setOpenCert] = useState(null);
   const [zoom, setZoom] = useState(1);
 
+  // ESC to close certificate modal
+  useEffect(() => {
+    if (!openCert) return;
+
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setOpenCert(null);
+        setZoom(1);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [openCert]);
+
   return (
-    <div className="min-h-screen overflow-hidden">
-      {/* Hero Section */}
+    <div className="min-h-screen overflow-x-hidden">
+      {/* Hero */}
       <section className="relative py-12 md:py-20 lg:py-24 bg-gradient-to-br from-amber-50 via-white to-amber-50">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-100/20 via-transparent to-transparent" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -146,21 +158,20 @@ export default function AboutPage() {
                 stiffness: 90,
                 damping: 14,
               }}
-              className="relative h-56 sm:h-72 md:h-80 lg:h-96 rounded-2xl lg:rounded-3xl overflow-hidden"
+              className="relative h-56 sm:h-72 md:h-80 lg:h-96 rounded-2xl lg:rounded-3xl overflow-hidden border border-amber-200/60 bg-white"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-amber-700 via-amber-600 to-amber-800 flex items-center justify-center">
-                <div className="relative  text-center">
-                  <CldImage
-                    src="https://res.cloudinary.com/drnascc38/image/upload/v1766143823/Picsart_25-12-19_19-29-08-105_cv6vbp.png"
-                    alt="image"
-                    width={1600}
-                    height={2200}
-                    className="wobject-contain rounded-xl bg-white shadow-lg border-none"
-                    sizes="(max-width: 768px) 92vw, 1000px"
-                    quality="auto"
-                    format="auto"
-                  />
-                </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-700 via-amber-600 to-amber-800" />
+              <div className="relative h-full w-full flex items-center justify-center p-4">
+                <CldImage
+                  src="https://res.cloudinary.com/drnascc38/image/upload/v1766143823/Picsart_25-12-19_19-29-08-105_cv6vbp.png"
+                  alt="About hero"
+                  width={1600}
+                  height={2200}
+                  className="h-full w-full object-contain rounded-xl bg-white shadow-lg"
+                  sizes="(max-width: 768px) 92vw, 1000px"
+                  quality="auto"
+                  format="auto"
+                />
               </div>
             </motion.div>
           </div>
@@ -263,7 +274,8 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-      {/* certificates */}
+
+      {/* Certificates */}
       <section className="py-12 md:py-16 lg:py-20 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -286,39 +298,41 @@ export default function AboutPage() {
               <motion.button
                 key={idx}
                 type="button"
-                onClick={() => setOpenCert(c)}
+                onClick={() => {
+                  setOpenCert(c);
+                  setZoom(1);
+                }}
                 initial={{ opacity: 0, y: 14 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.45, delay: idx * 0.08 }}
-                className="group relative w-full overflow-hidden rounded-2xl border-none text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-600"
+                className="group relative w-full overflow-hidden rounded-2xl border border-gray-100 bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 shadow-sm hover:shadow-xl transition"
                 aria-label={`Open certificate: ${c.label}`}
               >
-                <div className="relative aspect-[4/3] sm:aspect-[16/10] ">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <CldImage
-                    src={c.image}
-                    alt={c.image}
-                    width={1600}
-                    height={2200}
-                    className="w-auto mx-auto max-w-full h-auto max-h-[70vh] sm:max-h-[74vh] object-contain rounded-xl bg-white shadow-lg border-none"
-                    sizes="(max-width: 768px) 92vw, 1000px"
-                    quality="auto"
-                    format="auto"
-                  />
+                <div className="relative aspect-[4/3] sm:aspect-[16/10] overflow-hidden rounded-2xl bg-white border border-amber-100">
+                  {/* Full view (no crop) */}
+                  <div className="absolute inset-0 p-3 sm:p-4">
+                    <CldImage
+                      src={c.image}
+                      alt={c.label}
+                      width={1600}
+                      height={2200}
+                      className="h-full w-full object-contain bg-white rounded-xl"
+                      sizes="(max-width: 768px) 92vw, 1000px"
+                      quality="auto"
+                      format="auto"
+                    />
+                  </div>
+                  {/* bottom bar */}
+                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-3">
+                    <span className="min-w-0 truncate text-white text-sm font-semibold drop-shadow">
+                      {c.label}
+                    </span>
 
-                  {/* hover overlay */}
-                  <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    {/* <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" /> */}
-                    <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-                      <span className="text-white text-sm font-semibold truncate">
-                        {c.label}
-                      </span>
-                      <span className="inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-gray-900">
-                        <ZoomIn className="h-4 w-4 text-amber-800" />
-                        {lang === "en" ? "View" : "查看"}
-                      </span>
-                    </div>
+                    <span className="inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-white/60">
+                      <ZoomIn className="h-4 w-4 text-amber-800" />
+                      {lang === "en" ? "View" : "查看"}
+                    </span>
                   </div>
                 </div>
               </motion.button>
@@ -326,8 +340,7 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* ✅ Fullscreen modal */}
-        {/* ✅ Fullscreen modal (improved) */}
+        {/* Fullscreen modal */}
         {openCert && (
           <div
             className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm"
@@ -346,9 +359,7 @@ export default function AboutPage() {
               className="absolute inset-0 flex items-center justify-center p-3 sm:p-6"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Frame */}
               <div className="relative w-full max-w-6xl overflow-hidden rounded-2xl bg-white shadow-2xl">
-                {/* Top bar */}
                 <div className="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b bg-white">
                   <div className="min-w-0">
                     <p className="truncate text-sm sm:text-base font-semibold text-gray-900">
@@ -356,8 +367,8 @@ export default function AboutPage() {
                     </p>
                     <p className="text-xs sm:text-sm text-gray-500">
                       {lang === "en"
-                        ? "Tap outside to close • Use zoom for details"
-                        : "点击空白处关闭 • 可缩放查看细节"}
+                        ? "Press ESC to close • Use zoom for details"
+                        : "按 ESC 关闭 • 可缩放查看细节"}
                     </p>
                   </div>
 
@@ -367,25 +378,20 @@ export default function AboutPage() {
                         setZoom((z) => Math.max(1, +(z - 0.25).toFixed(2)))
                       }
                       className="hidden sm:inline-flex items-center justify-center rounded-full border bg-white px-3 py-2 text-xs font-semibold hover:bg-gray-50"
-                      aria-label="Zoom out"
                     >
                       {lang === "en" ? "Zoom -" : "缩小"}
                     </button>
-
                     <button
                       onClick={() =>
                         setZoom((z) => Math.min(3, +(z + 0.25).toFixed(2)))
                       }
                       className="hidden sm:inline-flex items-center justify-center rounded-full border bg-white px-3 py-2 text-xs font-semibold hover:bg-gray-50"
-                      aria-label="Zoom in"
                     >
                       {lang === "en" ? "Zoom +" : "放大"}
                     </button>
-
                     <button
                       onClick={() => setZoom(1)}
                       className="hidden sm:inline-flex items-center justify-center rounded-full border bg-white px-3 py-2 text-xs font-semibold hover:bg-gray-50"
-                      aria-label="Reset zoom"
                     >
                       {lang === "en" ? "Reset" : "重置"}
                     </button>
@@ -403,9 +409,7 @@ export default function AboutPage() {
                   </div>
                 </div>
 
-                {/* Viewer area */}
                 <div className="bg-neutral-950/5">
-                  {/* This wrapper keeps it centered and “gallery-like” */}
                   <div
                     className={`relative w-full h-[78vh] sm:h-[82vh] flex items-center justify-center ${
                       zoom > 1 ? "overflow-auto" : "overflow-hidden"
@@ -421,14 +425,13 @@ export default function AboutPage() {
                       }}
                       style={{ transformOrigin: "center center" }}
                     >
-                      {/* ✅ IMPORTANT: object-contain (no crop) */}
                       <div className="relative max-w-[92vw] sm:max-w-[1000px]">
                         <CldImage
                           src={openCert.image}
-                          alt={openCert.image}
+                          alt={openCert.label}
                           width={1600}
                           height={2200}
-                          className="w-auto max-w-full h-auto max-h-[70vh] sm:max-h-[74vh] object-contain rounded-xl bg-white shadow-lg border"
+                          className="w-auto max-w-full h-auto max-h-[72vh] object-contain rounded-xl bg-white shadow-lg border"
                           sizes="(max-width: 768px) 92vw, 1000px"
                           quality="auto"
                           format="auto"
@@ -437,7 +440,6 @@ export default function AboutPage() {
                     </motion.div>
                   </div>
 
-                  {/* Mobile zoom controls (bottom bar) */}
                   <div className="sm:hidden border-t bg-white px-4 py-3 flex items-center justify-between">
                     <button
                       onClick={() =>
@@ -471,7 +473,7 @@ export default function AboutPage() {
         )}
       </section>
 
-      {/* Our Values */}
+      {/* Values */}
       <section className="py-12 md:py-16 lg:py-20 bg-gradient-to-b from-gray-50 to-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -517,7 +519,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ✅ NEW: Facilities Photo Grid */}
+      {/* Facilities Photo Grid */}
       <section className="py-12 md:py-16 lg:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -548,17 +550,15 @@ export default function AboutPage() {
                 variants={itemVariants}
                 className="group rounded-2xl overflow-hidden border bg-white hover:shadow-xl transition-all"
               >
-                <div className="relative aspect-4/3 bg-gray-100 flex items-center justify-center">
-                  {/* dummy image - replace later */}
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                <div className="relative aspect-[4/3] bg-gray-100">
                   <CldImage
                     src={item.image}
                     alt={item.label}
-                    width={400}
-                    height={400}
+                    width={800}
+                    height={600}
                     className="h-full w-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-linear-to-t from-black/35 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
                   <div className="absolute bottom-2 left-2 right-2 flex items-center gap-2">
                     <span className="inline-flex items-center justify-center rounded-lg bg-white/90 px-2 py-1 text-xs font-semibold text-gray-900">
                       <ImageIcon className="h-3.5 w-3.5 mr-1 text-amber-800" />
@@ -572,9 +572,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <FactoryComparison />
-
-      {/* ✅ UPDATED Capabilities (your numbers) */}
+      {/* Capabilities */}
       <section className="py-12 md:py-16 lg:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -620,7 +618,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ✅ NEW: Internal Testing + Table */}
+      {/* Internal Testing (FIXED: single responsive table, no overflow) */}
       <section className="py-12 md:py-16 lg:py-20 bg-amber-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -639,12 +637,13 @@ export default function AboutPage() {
           </motion.div>
 
           <div className="grid lg:grid-cols-2 gap-6 lg:gap-10 items-start">
+            {/* Left */}
             <motion.div
               initial="hidden"
               whileInView="visible"
               variants={slideInLeft}
               viewport={{ once: true, amount: 0.25 }}
-              className="bg-white rounded-2xl border p-5 sm:p-6 lg:p-8"
+              className="bg-white rounded-2xl border border-amber-100 p-5 sm:p-6 lg:p-8 shadow-sm"
             >
               <div className="flex items-center gap-2 mb-4">
                 <ShieldCheck className="h-5 w-5 text-amber-800" />
@@ -668,24 +667,27 @@ export default function AboutPage() {
                 ))}
               </div>
 
-              <div className="mt-6 rounded-xl overflow-hidden border bg-gray-50">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
+              <div className="mt-6 rounded-xl overflow-hidden border border-amber-100 bg-gray-50">
                 <CldImage
                   src={currentContent.sections.testing.machineImage}
                   alt="Testing machine"
-                  width={600}
-                  height={600}
+                  width={1200}
+                  height={900}
                   className="w-full h-56 sm:h-64 object-cover"
+                  sizes="(max-width: 768px) 92vw, 700px"
+                  quality="auto"
+                  format="auto"
                 />
               </div>
             </motion.div>
 
+            {/* Right */}
             <motion.div
               initial="hidden"
               whileInView="visible"
               variants={slideInRight}
               viewport={{ once: true, amount: 0.25 }}
-              className="bg-white rounded-2xl border p-5 sm:p-6 lg:p-8"
+              className="bg-white rounded-2xl border border-amber-100 p-5 sm:p-6 lg:p-8 shadow-sm"
             >
               <div className="flex items-center gap-2 mb-4">
                 <Settings className="h-5 w-5 text-amber-800" />
@@ -694,10 +696,17 @@ export default function AboutPage() {
                 </h3>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="min-w-[620px] w-full text-left">
+              {/* SINGLE TABLE (no min-w), table-fixed + wrap => never overflow */}
+              <div className="w-full max-w-full overflow-x-auto rounded-xl border border-amber-100 bg-white">
+                <table className="w-full table-fixed text-left">
+                  <colgroup>
+                    <col className="w-[72px]" />
+                    <col className="w-[44%]" />
+                    <col className="w-[56%]" />
+                  </colgroup>
+
                   <thead>
-                    <tr className="border-b">
+                    <tr className="border-b bg-amber-50">
                       {currentContent.sections.testing.tableHeaders.map(
                         (h, i) => (
                           <th
@@ -710,16 +719,20 @@ export default function AboutPage() {
                       )}
                     </tr>
                   </thead>
+
                   <tbody>
                     {currentContent.sections.testing.tests.map((row, i) => (
-                      <tr key={i} className="border-b last:border-b-0">
-                        <td className="py-3 px-3 text-sm text-gray-700">
+                      <tr
+                        key={i}
+                        className="border-b last:border-b-0 hover:bg-amber-50/40"
+                      >
+                        <td className="py-3 px-3 text-xs sm:text-sm text-gray-700 align-top">
                           {row.no}
                         </td>
-                        <td className="py-3 px-3 text-sm text-gray-700">
+                        <td className="py-3 px-3 text-xs sm:text-sm text-gray-700 align-top max-w-0 break-words whitespace-normal">
                           {row.item}
                         </td>
-                        <td className="py-3 px-3 text-sm text-gray-700">
+                        <td className="py-3 px-3 text-xs sm:text-sm text-gray-700 align-top max-w-0 break-words whitespace-normal">
                           {row.equipment}
                         </td>
                       </tr>
@@ -729,7 +742,7 @@ export default function AboutPage() {
               </div>
 
               <div className="mt-5 grid sm:grid-cols-2 gap-3">
-                <div className="rounded-xl border bg-amber-50 p-4">
+                <div className="rounded-xl border border-amber-100 bg-amber-50 p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <Factory className="h-4 w-4 text-amber-800" />
                     <p className="font-semibold text-gray-900 text-sm">
@@ -740,7 +753,8 @@ export default function AboutPage() {
                     {currentContent.sections.testing.badge1Desc}
                   </p>
                 </div>
-                <div className="rounded-xl border bg-amber-50 p-4">
+
+                <div className="rounded-xl border border-amber-100 bg-amber-50 p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <Package className="h-4 w-4 text-amber-800" />
                     <p className="font-semibold text-gray-900 text-sm">
@@ -757,7 +771,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ✅ NEW: Materials & Product Range */}
+      {/* Materials & Product Range */}
       <section className="py-12 md:py-16 lg:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -853,7 +867,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Production Process (keep yours) */}
+      {/* Production Process */}
       <section className="py-12 md:py-16 lg:py-20 bg-amber-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -921,7 +935,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA */}
       <section className="py-12 md:py-16 lg:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
