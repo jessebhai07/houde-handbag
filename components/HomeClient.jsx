@@ -174,6 +174,12 @@ export default function HomeClient() {
           </div>
         </div>
       </div>
+      {/* TWO FACTORIES (polished + clear) */}
+      <TwoFactories
+        lang={lang}
+        chinaImg={factoryImages.china}
+        vietnamImg={factoryImages.vietnam}
+      />
 
       {/* CONTENT SECTIONS (your 3 sections + images) */}
       <div>
@@ -182,12 +188,7 @@ export default function HomeClient() {
         ))}
       </div>
 
-      {/* TWO FACTORIES (polished + clear) */}
-      <TwoFactories
-        lang={lang}
-        chinaImg={factoryImages.china}
-        vietnamImg={factoryImages.vietnam}
-      />
+      
 
       {/* STATS (using your capabilities numbers + factories) */}
       <section className="py-12 md:py-16 lg:py-20 bg-white">
@@ -327,29 +328,29 @@ function ContentSection({ section, index }) {
 }
 
 function TwoFactories({ lang, chinaImg, vietnamImg }) {
-  const title = lang === "en" ? "Two Production Companies" : "两大生产基地";
+  const title = lang === "en" ? "Two Production Bases" : "两大生产基地";
   const subtitle =
     lang === "en"
-      ? "China + Vietnam factories for flexible capacity, risk diversification, and stable delivery."
-      : "中国 + 越南双基地：更灵活的产能、更稳定的交付与更好的供应风险分散。";
+      ? "Same OEM/ODM services, unified quality system — delivered from China & Vietnam for flexible capacity and stable lead time."
+      : "同一 OEM/ODM 服务，同一质量体系——中国 + 越南双基地协同，产能更灵活、交期更稳定。";
 
   const cards = [
     {
       key: "china",
-      name: lang === "en" ? "China Factory" : "中国工厂",
+      name: lang === "en" ? "China Base" : "中国基地",
       desc:
         lang === "en"
-          ? "Sampling, development, and stable workshop execution with clear data systems."
-          : "打样开发 + 车间执行稳定，数据系统清晰可追踪。",
+          ? "Core manufacturing base running under unified SOPs: sampling & development, bulk production, and strict in-line + final QC for consistent quality."
+          : "核心制造基地，统一 SOP 运行：打样与开发、量产执行、过程检验 + 出货终检，确保品质一致稳定。",
       img: chinaImg,
     },
     {
       key: "vietnam",
-      name: lang === "en" ? "Vietnam Factory" : "越南工厂",
+      name: lang === "en" ? "Vietnam Base" : "越南基地",
       desc:
         lang === "en"
-          ? "Flexible production planning and global partner support for consistent output."
-          : "生产计划更灵活，支持全球客户稳定量产交付。",
+          ? "Parallel production base with the same standards and processes — supports flexible planning and reliable global delivery with steady output."
+          : "同标准、同工艺的协同产能基地：排产更灵活、产出更稳定，支持全球客户的可靠交付。",
       img: vietnamImg,
     },
   ];
@@ -383,11 +384,22 @@ function TwoFactories({ lang, chinaImg, vietnamImg }) {
                     <Factory className="h-10 w-10 text-amber-800" />
                   </div>
                 )}
+
                 <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
-                <div className="absolute bottom-3 left-3 right-3">
+
+                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-3">
                   <div className="inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-gray-900">
                     <Factory className="h-4 w-4 text-amber-800" />
                     {c.name}
+                  </div>
+
+                  <div className="hidden sm:flex items-center gap-2">
+                    <span className="rounded-full bg-white/90 px-3 py-1 text-[11px] font-semibold text-gray-900">
+                      {lang === "en" ? "Same services" : "同服务"}
+                    </span>
+                    <span className="rounded-full bg-white/90 px-3 py-1 text-[11px] font-semibold text-gray-900">
+                      {lang === "en" ? "Same QC" : "同质控"}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -399,13 +411,16 @@ function TwoFactories({ lang, chinaImg, vietnamImg }) {
 
                 <div className="mt-4 flex flex-wrap gap-2">
                   <span className="rounded-full bg-amber-50 border border-amber-100 px-3 py-1 text-xs font-semibold text-gray-800">
-                    {lang === "en" ? "OEM/ODM" : "OEM/ODM"}
+                    OEM/ODM
                   </span>
                   <span className="rounded-full bg-amber-50 border border-amber-100 px-3 py-1 text-xs font-semibold text-gray-800">
-                    {lang === "en" ? "Stable QC" : "稳定质控"}
+                    {lang === "en" ? "Unified SOP" : "统一SOP"}
                   </span>
                   <span className="rounded-full bg-amber-50 border border-amber-100 px-3 py-1 text-xs font-semibold text-gray-800">
-                    {lang === "en" ? "Fast sampling" : "快速打样"}
+                    {lang === "en" ? "Consistent QC" : "一致质检"}
+                  </span>
+                  <span className="rounded-full bg-amber-50 border border-amber-100 px-3 py-1 text-xs font-semibold text-gray-800">
+                    {lang === "en" ? "Stable lead time" : "稳定交期"}
                   </span>
                 </div>
               </div>
@@ -418,9 +433,7 @@ function TwoFactories({ lang, chinaImg, vietnamImg }) {
             href="/about"
             className="inline-flex items-center justify-center gap-2 rounded-full bg-amber-700 hover:bg-amber-800 text-white px-7 py-3 font-semibold transition"
           >
-            {lang === "en"
-              ? "Learn more about our factories"
-              : "了解更多工厂信息"}
+            {lang === "en" ? "Learn more about our factories" : "了解更多工厂信息"}
             <ArrowRight className="h-5 w-5" />
           </Link>
         </div>
@@ -428,6 +441,7 @@ function TwoFactories({ lang, chinaImg, vietnamImg }) {
     </section>
   );
 }
+
 
 function ProductCategories({ lang, data }) {
   if (!data) return null;

@@ -20,6 +20,7 @@ import {
   RotateCcw,
   Building2,
 } from "lucide-react";
+import TwoFactories from "./TwoFactories";
 
 /* ------------------------------ Motion presets ------------------------------ */
 const containerVariants = {
@@ -198,9 +199,7 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-white">
       {/* Hero */}
-      <section className="relative py-12 md:py-20 lg:py-24">
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-white to-amber-50" />
-        <div className="absolute inset-0 opacity-[0.25] [background-image:radial-gradient(#f59e0b_1px,transparent_1px)] [background-size:18px_18px]" />
+      <section className="relative bg-amber-100 py-12 md:py-20 lg:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <motion.div
@@ -290,8 +289,8 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+      {/* Two Companies (shown early) */}
       <section className="py-12 md:py-16 px-4 md:px-8 max-w-7xl mx-auto lg:py-20">
-        {/* Two Companies (shown early) */}
         {currentContent?.companies?.items?.length >= 2 && (
           <motion.div variants={itemVariants} className="pt-2">
             <div className="rounded-2xl border border-amber-200/70 bg-white/70 backdrop-blur px-4 py-4 md:px-5 md:py-5 shadow-sm">
@@ -325,6 +324,61 @@ export default function AboutPage() {
         )}
       </section>
 
+      <TwoFactories
+        
+      />
+      {/* Facilities Photo Grid */}
+      <section className="py-12 bg-amber-100 md:py-16 lg:py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={reduceMotion ? false : { opacity: 0, y: 22 }}
+            whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+            transition={reduceMotion ? undefined : { duration: 0.6 }}
+            viewport={{ once: true, amount: 0.25 }}
+            className="text-center mb-8 md:mb-12"
+          >
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3">
+              {currentContent.sections.facilities.title}
+            </h2>
+            <p className="text-gray-600 max-w-3xl mx-auto text-sm md:text-base lg:text-lg">
+              {currentContent.sections.facilities.subtitle}
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={reduceMotion ? false : "hidden"}
+            whileInView={reduceMotion ? undefined : "visible"}
+            variants={reduceMotion ? undefined : containerVariants}
+            viewport={{ once: true, amount: 0.2 }}
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"
+          >
+            {currentContent.sections.facilities.items.map((item, idx) => (
+              <motion.div
+                key={idx}
+                variants={reduceMotion ? undefined : itemVariants}
+                className="group rounded-2xl overflow-hidden border bg-white shadow-sm hover:shadow-xl transition-all"
+              >
+                <div className="relative aspect-[4/3] bg-gray-100">
+                  <CldImage
+                    src={item.image}
+                    alt={item.label}
+                    width={800}
+                    height={600}
+                    className="h-full w-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+                  <div className="absolute bottom-2 left-2 right-2 flex items-center gap-2">
+                    <span className="inline-flex items-center justify-center rounded-lg bg-white/90 px-2 py-1 text-xs font-semibold text-gray-900">
+                      <ImageIcon className="h-3.5 w-3.5 mr-1 text-amber-800" />
+                      {item.label}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
       {/* Our Story & Mission */}
       <section className="py-12 md:py-16 lg:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -411,7 +465,7 @@ export default function AboutPage() {
       </section>
 
       {/* Certificates */}
-      <section className="py-12 md:py-16 lg:py-20 bg-white">
+      <section className="py-12 md:py-16 lg:py-20 ">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={reduceMotion ? false : { opacity: 0, y: 18 }}
@@ -452,7 +506,7 @@ export default function AboutPage() {
                   <div className="absolute inset-0 p-3 sm:p-4">
                     <CldImage
                       src={c.image}
-                      alt={c.label}
+                      alt="ok"
                       width={1600}
                       height={2200}
                       className="h-full w-full object-contain bg-white rounded-xl"
@@ -463,7 +517,6 @@ export default function AboutPage() {
                   </div>
 
                   {/* Better readability for label on any certificate background */}
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
 
                   <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-3">
                     <span className="min-w-0 truncate text-white text-sm font-semibold drop-shadow">
@@ -618,7 +671,7 @@ export default function AboutPage() {
       </section>
 
       {/* Values */}
-      <section className="py-12 md:py-16 lg:py-20 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-12 md:py-16 lg:py-20 bg-amber-800">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={reduceMotion ? false : { opacity: 0, y: 26 }}
@@ -627,10 +680,10 @@ export default function AboutPage() {
             viewport={{ once: true, amount: 0.25 }}
             className="text-center mb-10 md:mb-16"
           >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 md:mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-100 mb-3 md:mb-4">
               {currentContent.sections.values.title}
             </h2>
-            <p className="text-gray-600 max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto text-sm md:text-base lg:text-lg">
+            <p className=" text-white max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto text-sm md:text-base lg:text-lg">
               {lang === "en"
                 ? "The principles that guide everything we do"
                 : "指导我们一切行动的原则"}
@@ -664,59 +717,6 @@ export default function AboutPage() {
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Facilities Photo Grid */}
-      <section className="py-12 md:py-16 lg:py-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: 22 }}
-            whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-            transition={reduceMotion ? undefined : { duration: 0.6 }}
-            viewport={{ once: true, amount: 0.25 }}
-            className="text-center mb-8 md:mb-12"
-          >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3">
-              {currentContent.sections.facilities.title}
-            </h2>
-            <p className="text-gray-600 max-w-3xl mx-auto text-sm md:text-base lg:text-lg">
-              {currentContent.sections.facilities.subtitle}
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={reduceMotion ? false : "hidden"}
-            whileInView={reduceMotion ? undefined : "visible"}
-            variants={reduceMotion ? undefined : containerVariants}
-            viewport={{ once: true, amount: 0.2 }}
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"
-          >
-            {currentContent.sections.facilities.items.map((item, idx) => (
-              <motion.div
-                key={idx}
-                variants={reduceMotion ? undefined : itemVariants}
-                className="group rounded-2xl overflow-hidden border bg-white shadow-sm hover:shadow-xl transition-all"
-              >
-                <div className="relative aspect-[4/3] bg-gray-100">
-                  <CldImage
-                    src={item.image}
-                    alt={item.label}
-                    width={800}
-                    height={600}
-                    className="h-full w-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-                  <div className="absolute bottom-2 left-2 right-2 flex items-center gap-2">
-                    <span className="inline-flex items-center justify-center rounded-lg bg-white/90 px-2 py-1 text-xs font-semibold text-gray-900">
-                      <ImageIcon className="h-3.5 w-3.5 mr-1 text-amber-800" />
-                      {item.label}
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
         </div>
       </section>
 
