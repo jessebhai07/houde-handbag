@@ -8,16 +8,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { Maximize2, X } from "lucide-react";
-
-// --- Types (Optional if using TS) ---
+import { Maximize2 } from "lucide-react";
 
 const FALLBACK_CATEGORIES = [
   "Back Pack",
@@ -31,16 +27,6 @@ const FALLBACK_CATEGORIES = [
   "Tablet cases",
   "Headphone Bag",
 ];
-
-// --- Helper: Shuffle Array (Fisher-Yates) ---
-const shuffleArray = (array) => {
-  const newArray = [...array];
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-  }
-  return newArray;
-};
 
 // --- Component: Single Image Tile ---
 function CloudTile({ src, alt, category, className, priority = false }) {
@@ -81,22 +67,8 @@ function CloudTile({ src, alt, category, className, priority = false }) {
 
       {/* Modal View */}
       <DialogContent className="max-w-fit bg-white w-full border-none shadow-none p-4 flex flex-col items-center justify-center gap-0 overflow-hidden">
-        {/* ACCESSIBILITY NOTE: 
-     Radix UI requires a DialogTitle for screen readers. 
-     We hide it visually but keep it for DOM structure.
-  */}
         <DialogTitle className="sr-only">Image Preview</DialogTitle>
 
-        {/* CLOSE BUTTON ROW
-      Positioned relative to the image container or fixed at top-right.
-      Using DialogClose here ensures clicking it always closes the modal.
-  */}
-
-        {/* IMAGE CONTAINER 
-      1. We removed onClick={(e) => e.stopPropagation()}. 
-         Now, clicking the empty space around the image (the overlay) will close it naturally.
-      2. The image handles its own aspect ratio.
-  */}
         <div className="relative overflow-hidden rounded-lg shadow-2xl ring-1 ring-white/10 bg-black/20 backdrop-blur-sm">
           <CldImage
             src={src}
@@ -118,9 +90,6 @@ export default function PublicProductsGallery() {
   const [categories, setCategories] = useState(FALLBACK_CATEGORIES);
   const [fetching, setFetching] = useState(true);
   const [activeTab, setActiveTab] = useState("all");
-
-  // State for shuffled images to prevent hydration mismatch
-  const [shuffledAll, setShuffledAll] = useState([]);
 
   // 1. Fetch Data
   useEffect(() => {
@@ -173,12 +142,7 @@ export default function PublicProductsGallery() {
     return images;
   }, [allCategories, productByCategory]);
 
-  // 4. Shuffle Effect (Client-side only)
-  useEffect(() => {
-    setShuffledAll(shuffleArray(allFlatImages));
-  }, [allFlatImages]);
-
-  // 5. Loading State
+  // 4. Loading State
   if (fetching) {
     return (
       <div className="w-full space-y-6">
@@ -203,7 +167,6 @@ export default function PublicProductsGallery() {
     <div className="w-full space-y-8">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         {/* Scrollable Tabs List */}
-        {/* Replaced ScrollArea with a Grid Layout */}
         <div className="w-full mb-8">
           <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-2 h-auto bg-transparent p-0">
             <TabsTrigger
@@ -227,13 +190,13 @@ export default function PublicProductsGallery() {
 
         {/* --- TAB: ALL (Masonry Layout) --- */}
         <TabsContent value="all" className="mt-6 min-h-[50vh]">
-          {shuffledAll.length === 0 ? (
+          {allFlatImages.length === 0 ? (
             <p className="text-muted-foreground text-center py-10">
               No images found.
             </p>
           ) : (
             <div className="columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4 space-y-4">
-              {shuffledAll.map((item, idx) => (
+              {allFlatImages.map((item, idx) => (
                 <div key={item.id} className="break-inside-avoid">
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -276,7 +239,6 @@ export default function PublicProductsGallery() {
                   <p>No images available for {cat}</p>
                 </div>
               ) : (
-                // Using Grid here because strictly categorized items look better organized
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                   {imgs.map((src, idx) => (
                     <motion.div
@@ -288,7 +250,6 @@ export default function PublicProductsGallery() {
                       <CloudTile
                         src={src}
                         alt={`${cat} ${idx + 1}`}
-                        // category={cat} // Optional: hide category name in grid view since tab is active
                         priority={idx < 6}
                       />
                     </motion.div>

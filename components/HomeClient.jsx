@@ -21,6 +21,7 @@ import TestimonialsCarousel from "@/components/Testimonials";
 import { homeData, homeImages } from "@/lib/dictionary/homeData";
 // reuse your about data for factory images + material list (still “your data”)
 import { content as aboutContent } from "@/lib/dictionary/aboutData";
+import TwoFactories from "@/app/about/TwoFactories";
 
 /* ---------------- helpers ---------------- */
 const shimmer = (w, h) => `
@@ -175,11 +176,12 @@ export default function HomeClient() {
         </div>
       </div>
       {/* TWO FACTORIES (polished + clear) */}
-      <TwoFactories
+      {/* <TwoFactories
         lang={lang}
         chinaImg={factoryImages.china}
         vietnamImg={factoryImages.vietnam}
-      />
+      /> */}
+      <TwoFactories/>
 
       {/* CONTENT SECTIONS (your 3 sections + images) */}
       <div>
@@ -327,7 +329,7 @@ function ContentSection({ section, index }) {
   );
 }
 
-function TwoFactories({ lang, chinaImg, vietnamImg }) {
+function TwoFactoriess({ lang, chinaImg, vietnamImg }) {
   const title = lang === "en" ? "Two Production Bases" : "两大生产基地";
   const subtitle =
     lang === "en"

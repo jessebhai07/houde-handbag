@@ -1,16 +1,14 @@
 "use client";
 
 import { useMemo } from "react";
-import Link from "next/link";
 import { CldImage } from "next-cloudinary";
-import { Factory, ArrowRight } from "lucide-react";
-import { useLanguage } from "@/components/LanguageProvider"; // Ensure path is correct
-import { content as aboutContent } from "@/lib/dictionary/aboutData"; // Ensure path is correct
+import { Factory, MapPin, ShieldCheck, Globe2, Zap, Layers } from "lucide-react";
+import { useLanguage } from "@/components/LanguageProvider";
+import { content as aboutContent } from "@/lib/dictionary/aboutData";
 
 /* -------------------------------------------------------------------------- */
-/* HELPERS                                  */
+/* UTILS (Keep existing utils) */
 /* -------------------------------------------------------------------------- */
-
 const shimmer = (w, h) => `
 <svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
   <defs>
@@ -47,16 +45,16 @@ function cloudinaryPublicId(src) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* MAIN COMPONENT                                 */
+/* COMPONENT */
 /* -------------------------------------------------------------------------- */
-
 export default function TwoFactories() {
   const { lang } = useLanguage();
+  const isEn = lang === "en";
 
-  // 1. Get About Data based on current language
+  // 1. Get Data
   const about = aboutContent?.[lang] ?? aboutContent.en;
 
-  // 2. Extract China/Vietnam images internally
+  // 2. Extract Images
   const factoryImages = useMemo(() => {
     const items = about?.sections?.facilities?.items || [];
     const china = items.find((x) => /China|中国/i.test(x.label))?.image || null;
@@ -64,132 +62,146 @@ export default function TwoFactories() {
     return { china, vietnam };
   }, [about]);
 
-  // 3. Define text constants
-  const title = lang === "en" ? "Two Production Bases" : "两大生产基地";
-  const subtitle =
-    lang === "en"
-      ? "Same OEM/ODM services, unified quality system — delivered from China & Vietnam for flexible capacity and stable lead time."
-      : "同一 OEM/ODM 服务，同一质量体系——中国 + 越南双基地协同，产能更灵活、交期更稳定。";
-
-  const cards = [
-    {
-      key: "china",
-      name: lang === "en" ? "China Base" : "中国基地",
-      desc:
-        lang === "en"
-          ? "Core manufacturing base running under unified SOPs: sampling & development, bulk production, and strict in-line + final QC for consistent quality."
-          : "核心制造基地，统一 SOP 运行：打样与开发、量产执行、过程检验 + 出货终检，确保品质一致稳定。",
-      img: factoryImages.china,
-    },
-    {
-      key: "vietnam",
-      name: lang === "en" ? "Vietnam Base" : "越南基地",
-      desc:
-        lang === "en"
-          ? "Parallel production base with the same standards and processes — supports flexible planning and reliable global delivery with steady output."
-          : "同标准、同工艺的协同产能基地：排产更灵活、产出更稳定，支持全球客户的可靠交付。",
-      img: factoryImages.vietnam,
-    },
-  ];
+  // 3. Define Content
+  const content = {
+    title: isEn ? "Global Manufacturing Footprint" : "全球制造布局",
+    subtitle: isEn
+      ? "Dual-base strategy ensuring flexible capacity, risk mitigation, and unified quality."
+      : "双基地战略确保灵活的产能、风险规避以及统一的质量标准。",
+    bridgeText: isEn ? "Unified Quality Standard (ISO 9001)" : "统一质量标准 (ISO 9001)",
+    bases: [
+      {
+        id: "china",
+        country: isEn ? "China Base" : "中国基地",
+        location: isEn ? "Dongguan, Guangdong" : "广东东莞",
+        role: isEn ? "Headquarters & R&D" : "总部与研发中心",
+        desc: isEn 
+          ? "Our core facility for complex designs, rapid prototyping, and material sourcing. Handles high-end manufacturing and technical development."
+          : "负责复杂设计、快速打样和材料采购的核心设施。处理高端制造和技术开发。",
+        img: factoryImages.china,
+        features: isEn 
+          ? ["Rapid Sampling", "Complex Craftsmanship", "Material Hub"]
+          : ["快速打样", "复杂工艺", "材料中心"]
+      },
+      {
+        id: "vietnam",
+        country: isEn ? "Vietnam Base" : "越南基地",
+        location: isEn ? "Binh Duong,Vietnam" : "Binh Duong,越南",
+        role: isEn ? "Volume Production" : "大批量生产基地",
+        desc: isEn
+          ? "Specialized in large-scale production runs with competitive labor costs and tariff advantages for specific international markets."
+          : "专注于具有竞争力的劳动力成本和针对特定国际市场的关税优势的大规模生产。",
+        img: factoryImages.vietnam,
+        features: isEn 
+          ? ["High Capacity", "Cost Efficient", "Tariff Benefits"]
+          : ["高产能", "成本效益", "关税优势"]
+      }
+    ]
+  };
 
   return (
-    <section className="py-12 md:py-16 lg:py-20 ">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 md:py-24 bg-white relative overflow-hidden">
+      {/* Background Decor */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-5">
+         <Globe2 className="absolute -right-20 -top-20 w-[500px] h-[500px] text-slate-900" />
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Section Heading */}
-        <div className="text-center mb-8">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">
-            {title}
+        {/* Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-100 text-amber-800 text-sm font-semibold mb-4">
+             <Globe2 className="w-4 h-4" />
+             {isEn ? "Strategic Locations" : "战略布局"}
+          </div>
+          <h2 className="text-3xl md:text-5xl font-serif font-bold text-slate-900 mb-4">
+            {content.title}
           </h2>
-          <p className="mt-3 text-sm sm:text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
-            {subtitle}
+          <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+            {content.subtitle}
           </p>
         </div>
 
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-          {cards.map((c) => (
-            <div
-              key={c.key}
-              className="rounded-2xl border bg-white overflow-hidden shadow-sm hover:shadow-xl transition"
-            >
-              <div className="relative aspect-[16/9] bg-gray-100">
-                {c.img ? (
-                  <CldImage
-                    src={cloudinaryPublicId(c.img)}
-                    alt={c.name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    quality="auto"
-                    format="auto"
-                    placeholder="blur"
-                    blurDataURL={shimmerDataUrl(1200, 800)}
-                  />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Factory className="h-10 w-10 text-amber-800" />
-                  </div>
-                )}
-
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
-
-                {/* Card Tags (Bottom Left) */}
-                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-3">
-                  <div className="inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-gray-900">
-                    <Factory className="h-4 w-4 text-amber-800" />
-                    {c.name}
-                  </div>
-
-                  <div className="hidden sm:flex items-center gap-2">
-                    <span className="rounded-full bg-white/90 px-3 py-1 text-[11px] font-semibold text-gray-900">
-                      {lang === "en" ? "Same services" : "同服务"}
-                    </span>
-                    <span className="rounded-full bg-white/90 px-3 py-1 text-[11px] font-semibold text-gray-900">
-                      {lang === "en" ? "Same QC" : "同质控"}
-                    </span>
-                  </div>
+        {/* The Factory Cards */}
+        <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+          
+          {/* Central "Bridge" Badge (Desktop Only) */}
+          <div className="hidden lg:flex absolute left-1/2 top-12 -translate-x-1/2 z-20 flex-col items-center justify-center">
+            <div className="bg-white border-2 border-amber-100 shadow-xl rounded-full p-2">
+                <div className="bg-amber-700 rounded-full w-12 h-12 flex items-center justify-center text-white">
+                    <ShieldCheck className="w-6 h-6" />
                 </div>
+            </div>
+            <div className="mt-2 bg-white/90 backdrop-blur px-3 py-1 rounded-full border border-slate-100 shadow-sm text-xs font-bold text-slate-700 whitespace-nowrap">
+                {content.bridgeText}
+            </div>
+          </div>
+
+          {content.bases.map((base, idx) => (
+            <div 
+              key={base.id} 
+              className={`
+                group relative flex flex-col h-full bg-white rounded-3xl border border-slate-100 shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1
+                ${idx === 0 ? 'lg:mr-4' : 'lg:ml-4'} 
+              `}
+            >
+              {/* Image Section */}
+              <div className="relative w-full h-64 md:h-80 overflow-hidden bg-slate-100">
+                 {base.img ? (
+                   <CldImage
+                     src={cloudinaryPublicId(base.img)}
+                     alt={base.country}
+                     fill
+                     className="object-cover transition-transform duration-700 group-hover:scale-105"
+                     sizes="(max-width: 1024px) 100vw, 50vw"
+                   />
+                 ) : (
+                   <div className="absolute inset-0 flex items-center justify-center text-slate-300">
+                     <Factory className="w-16 h-16" />
+                   </div>
+                 )}
+                 
+                 {/* Map Pin Label */}
+                 <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${base.id === 'china' ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700'}`}>
+                        <MapPin className="w-5 h-5" />
+                    </div>
+                    <div>
+                        <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">{base.country}</p>
+                        <p className="text-sm font-bold text-slate-900 leading-none">{base.location}</p>
+                    </div>
+                 </div>
               </div>
 
-              {/* Card Content */}
-              <div className="p-5 sm:p-6">
-                <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-                  {c.desc}
+              {/* Content Section */}
+              <div className="flex-1 p-8">
+                <div className="flex items-center gap-2 mb-4">
+                    {base.id === 'china' ? <Zap className="w-5 h-5 text-amber-600"/> : <Layers className="w-5 h-5 text-amber-600"/>}
+                    <span className="text-amber-700 font-bold text-sm uppercase tracking-wide">
+                        {base.role}
+                    </span>
+                </div>
+                
+                <p className="text-slate-600 leading-relaxed mb-8 min-h-[80px]">
+                    {base.desc}
                 </p>
 
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <span className="rounded-full bg-amber-50 border border-amber-100 px-3 py-1 text-xs font-semibold text-gray-800">
-                    OEM/ODM
-                  </span>
-                  <span className="rounded-full bg-amber-50 border border-amber-100 px-3 py-1 text-xs font-semibold text-gray-800">
-                    {lang === "en" ? "Unified SOP" : "统一SOP"}
-                  </span>
-                  <span className="rounded-full bg-amber-50 border border-amber-100 px-3 py-1 text-xs font-semibold text-gray-800">
-                    {lang === "en" ? "Consistent QC" : "一致质检"}
-                  </span>
-                  <span className="rounded-full bg-amber-50 border border-amber-100 px-3 py-1 text-xs font-semibold text-gray-800">
-                    {lang === "en" ? "Stable lead time" : "稳定交期"}
-                  </span>
+                {/* Features List */}
+                <div className="border-t border-slate-100 pt-6">
+                    <ul className="space-y-3">
+                        {base.features.map((feature, i) => (
+                            <li key={i} className="flex items-center text-slate-700 font-medium">
+                                <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-3" />
+                                {feature}
+                            </li>
+                        ))}
+                    </ul>
                 </div>
               </div>
             </div>
           ))}
-        </div>
 
-        {/* Bottom CTA */}
-        {/* <div className="mt-8 text-center">
-          <Link
-            href="/about"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-amber-700 hover:bg-amber-800 text-white px-7 py-3 font-semibold transition"
-          >
-            {lang === "en"
-              ? "Learn more about our factories"
-              : "了解更多工厂信息"}
-            <ArrowRight className="h-5 w-5" />
-          </Link>
-        </div> */}
+        </div>
       </div>
     </section>
   );
