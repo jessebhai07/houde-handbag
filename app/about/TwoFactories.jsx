@@ -127,8 +127,8 @@ export default function TwoFactories() {
           
           {/* Central "Bridge" Badge (Desktop Only) */}
           <div className="hidden lg:flex absolute left-1/2 top-12 -translate-x-1/2 z-20 flex-col items-center justify-center">
-            <div className="bg-white border-2 border-amber-100 shadow-xl rounded-full p-2">
-                <div className="bg-amber-700 rounded-full w-12 h-12 flex items-center justify-center text-white">
+            <div className="bg-white border-2 border-green-200 shadow-xl rounded-full p-2">
+                <div className="bg-green-600 rounded-full w-12 h-12 flex items-center justify-center text-white">
                     <ShieldCheck className="w-6 h-6" />
                 </div>
             </div>
