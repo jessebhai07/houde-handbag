@@ -1,36 +1,78 @@
-import { NextResponse } from "next/server";
-import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
+import { NextResponse } from 'next/server';
+import { Ratelimit } from '@upstash/ratelimit';
+import { Redis } from '@upstash/redis';
 
+// 1. Initialize Upstash Redis
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
   token: process.env.UPSTASH_REDIS_REST_TOKEN,
 });
 
+// 2. Define Rate Limit (e.g., 5 requests per 10 seconds)
 const ratelimit = new Ratelimit({
   redis: redis,
   limiter: Ratelimit.slidingWindow(5, "10 s"),
-  analytics: true,
 });
 
-export default async function middleware(request) {
-  if (request.nextUrl.pathname.startsWith("/api")) {
-    const ip =
-      request.ip || request.headers.get("x-forwarded-for") || "127.0.0.1";
+export async function middleware(request) {
+  // Define your allowed domains
+  const allowedOrigins = [
+    'https://alpha-stack-log-coil.vercel.app', 
+    'http://localhost:3000' // Required for local development
+  ];
 
-    const { success } = await ratelimit.limit(ip);
+  const origin = request.headers.get('origin');
+  const referer = request.headers.get('referer');
+  const ip = request.ip || '127.0.0.1';
 
-    if (!success) {
-      return NextResponse.json(
-        { error: "Too many requests. Please try again later." },
-        { status: 429 }
+  // --- STEP 1: SECURITY CHECK (Block Postman) ---
+  // We strictly check Origin/Referer to ensure the request is from a browser on YOUR site
+  
+  // Case A: Request has an Origin (Standard for POST/PUT/DELETE)
+  if (origin && !allowedOrigins.includes(origin)) {
+    return new NextResponse(
+      JSON.stringify({ message: 'Unauthorized: Bad Origin' }),
+      { status: 403, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
+  // Case B: No Origin, so we check Referer (Standard for GET)
+  // If BOTH are missing, it is likely Postman or a script -> BLOCK IT
+  if (!origin && !referer) {
+    return new NextResponse(
+      JSON.stringify({ message: 'Unauthorized: Direct API access denied' }),
+      { status: 403, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
+  // Case C: Check if Referer starts with allowed domain
+  if (!origin && referer) {
+    const isValidReferer = allowedOrigins.some(domain => referer.startsWith(domain));
+    if (!isValidReferer) {
+      return new NextResponse(
+        JSON.stringify({ message: 'Unauthorized: Bad Referer' }),
+        { status: 403, headers: { 'Content-Type': 'application/json' } }
       );
     }
   }
 
+  // --- STEP 2: RATE LIMITER (Block Spammers) ---
+  // Only runs if the Security Check passed
+  
+  const { success } = await ratelimit.limit(ip);
+
+  if (!success) {
+    return new NextResponse(
+      JSON.stringify({ error: 'Too many requests. Slow down.' }),
+      { status: 429, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
+  // If both checks pass, allow the request
   return NextResponse.next();
 }
 
+// Apply to all API routes
 export const config = {
-  matcher: "/api/:path*",
+  matcher: '/api/:path*',
 };

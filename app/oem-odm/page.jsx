@@ -138,8 +138,8 @@ const content = {
       zh: "交货时间",
     },
     deliveryText: {
-      en: "7 days for sample, 15-30 days for mass production.",
-      zh: "样品7天，大货生产15-30天。",
+      en: "14 days for sample, 30-35 days for MOQ production.",
+      zh: "样品7天, MOQ 生产15-30天。",
     },
     payment: {
       en: "Payment Term",
@@ -287,7 +287,7 @@ const polishedImages = {
 
 const GridImage = ({ src, alt, height = "h-64" }) => (
   <div
-    className={`relative ${height} w-full rounded-xl overflow-hidden shadow-lg group cursor-pointer`}
+    className={`relative ${height} w-full rounded-xl overflow-hidden group cursor-pointer`}
   >
     <Image
       src={src}
@@ -296,7 +296,7 @@ const GridImage = ({ src, alt, height = "h-64" }) => (
       className="object-cover transition-transform duration-1000 group-hover:scale-110"
       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
     />
-    <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+    {/* <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" /> */}
   </div>
 );
 
@@ -316,6 +316,10 @@ export default function BagManufacturerPage() {
     }),
     [isEn]
   );
+
+  const phone = "-----";
+  const text = encodeURIComponent("Hello! I found you via my React app.");
+  const url = `https://wa.me/${phone}?text=${text}`;
 
   return (
     <>
@@ -372,7 +376,7 @@ export default function BagManufacturerPage() {
           >
             <Button
               size="xl"
-              className="w-full sm:w-auto h-auto flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 px-8 py-6 md:px-10 md:py-6 bg-amber-600 hover:bg-amber-500 shadow-2xl hover:shadow-amber-600/40 transition-all duration-300 group"
+              className="w-full sm:w-auto h-auto flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 px-8 py-6 md:px-10 md:py-6 bg-amber-600 hover:bg-amber-500   transition-all duration-300 group"
             >
               {/* Block 1: Contact Icon + Text */}
               <span className="flex items-center justify-center gap-2 md:gap-3">
@@ -463,7 +467,7 @@ export default function BagManufacturerPage() {
                   transition={{ delay: i * 0.1 }}
                   className="group"
                 >
-                  <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-white">
+                  <Card className="overflow-hidden transition-all duration-500 hover:-translate-y-2 border-none shadow-none hover:outline-4 outline hover:shadow-2xl hover:outline-amber-300 ">
                     {/* Smaller, tighter image container */}
                     <div className="relative aspect-8/5 overflow-hidden bg-slate-50">
                       <Image
@@ -541,7 +545,7 @@ export default function BagManufacturerPage() {
                   key={i}
                   src={src}
                   alt={`Color palette ${i + 1}`}
-                  height="h-80"
+                  height="h-96"
                 />
               ))}
             </div>
@@ -580,7 +584,7 @@ export default function BagManufacturerPage() {
                 key={idx}
                 className="shadow-xl hover:shadow-2xl transition-shadow border-0 bg-white/90 backdrop-blur"
               >
-                <CardHeader className="bg-gradient-to-b from-amber-50 to-transparent">
+                <CardHeader className="bg-linear-to-b from-amber-50 to-transparent">
                   <CardTitle className="text-2xl text-center text-slate-800">
                     {section.title}
                   </CardTitle>
@@ -593,7 +597,7 @@ export default function BagManufacturerPage() {
                           key={i}
                           className="flex items-center text-slate-700"
                         >
-                          <Check className="mr-4 h-6 w-6 text-amber-600 flex-shrink-0" />
+                          <Check className="mr-4 h-6 w-6 text-amber-600 shrink-0" />
                           <span className="text-lg">
                             {item[isEn ? "en" : "zh"]}
                           </span>
@@ -642,13 +646,15 @@ export default function BagManufacturerPage() {
               <Phone className="mr-4 h-8 w-8" />
               Contact Us Today
             </Link>
-            <Link
-              href="/"
+            <button
+              
               className="text-xl px-5 py-2 flex rounded-2xl justify-center items-center bg-green-400 hover:bg-green-500 shadow-2xl"
+              onClick={() => window.open(url, "_blank", "noopener,noreferrer")}
+              type="button"
             >
               <MessageCircle className="mr-4 h-8 w-8" />
               WhatsApp Inquiry
-            </Link>
+            </button>
           </motion.div>
         </div>
       </section>

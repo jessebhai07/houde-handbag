@@ -120,7 +120,7 @@ export default function HomeClient() {
     return [
       {
         title: lang === "en" ? "Factories" : "工厂",
-        value: "2",
+        value: "3",
         unit: lang === "en" ? "China + Vietnam" : "中国 + 越南",
       },
       ...caps.map((x) => ({ title: x.title, value: x.value, unit: x.unit })),
@@ -133,45 +133,47 @@ export default function HomeClient() {
       <HomeCarousel />
 
       {/* Slim trust/position bar */}
-      <div className="border-b bg-amber-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-xs font-semibold text-gray-800">
-              <Factory className="h-4 w-4 text-amber-800" />
-              {lang === "en"
-                ? "2 production companies: China + Vietnam"
-                : "两大生产基地：中国 + 越南"}
-            </span>
-            <span className="inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-xs font-semibold text-gray-800">
-              <Globe2 className="h-4 w-4 text-amber-800" />
-              {lang === "en" ? "OEM/ODM • Global supply" : "OEM/ODM • 全球供货"}
-            </span>
-            <span className="inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-xs font-semibold text-gray-800">
-              <ShieldCheck className="h-4 w-4 text-amber-800" />
-              {lang === "en"
-                ? "Internal testing + stable QC"
-                : "内部测试 + 稳定质控"}
-            </span>
-            <span className="inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-xs font-semibold text-gray-800">
-              <Timer className="h-4 w-4 text-amber-800" />
-              {lang === "en" ? "Fast sampling" : "快速打样"}
-            </span>
-          </div>
+      <div className="w-full bg-amber-800 border-b border-slate-200 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            {/* Left Side: Status / Info Badges */}
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2 group">
+                <div className="p-1.5 rounded-lg bg-amber-100 text-amber-800 group-hover:bg-amber-800 group-hover:text-white transition-colors">
+                  <Factory className="h-4 w-4" />
+                </div>
+                <span className="text-sm font-medium ">
+                  {lang === "en" ? "China + Vietnam Units" : "中越双生产基地"}
+                </span>
+              </div>
 
-          {/* Non-leather note */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-xs font-semibold text-gray-800">
-              <TableProperties className="h-4 w-4 text-amber-800" />
-              {lang === "en" ? "Non-leather materials:" : "非皮革材料："}
-            </span>
-            {nonLeatherBadges.map((m) => (
-              <span
-                key={m}
-                className="rounded-full bg-white border border px-2.5 py-1 text-xs font-semibold text-gray-800"
-              >
-                {m}
-              </span>
-            ))}
+              <div className="h-4 w-[1px] bg-slate-300 hidden md:block" />
+
+              <div className="flex items-center gap-2 group">
+                <div className="p-1.5 rounded-lg bg-amber-100 text-amber-800 group-hover:bg-amber-800 group-hover:text-white transition-colors">
+                  <Globe2 className="h-4 w-4" />
+                </div>
+                <span className="text-sm font-medium ">
+                  {lang === "en" ? "OEM/ODM Global" : "OEM/ODM 全球供货"}
+                </span>
+              </div>
+            </div>
+
+            {/* Right Side: Trust & Speed Indicators */}
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                <span className="text-xs font-semibold uppercase tracking-wider ">
+                  {lang === "en" ? "Stable QC" : "稳定质控"}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Timer className="h-4 w-4 text-amber-600" />
+                <span className="text-xs font-semibold uppercase tracking-wider ">
+                  {lang === "en" ? "Fast Sampling" : "快速打样"}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -181,7 +183,7 @@ export default function HomeClient() {
         chinaImg={factoryImages.china}
         vietnamImg={factoryImages.vietnam}
       /> */}
-      <TwoFactories/>
+      <TwoFactories />
 
       {/* CONTENT SECTIONS (your 3 sections + images) */}
       <div>
@@ -189,8 +191,6 @@ export default function HomeClient() {
           <ContentSection key={index} section={section} index={index} />
         ))}
       </div>
-
-      
 
       {/* STATS (using your capabilities numbers + factories) */}
       <section className="py-12 md:py-16 lg:py-20 bg-white">
@@ -210,7 +210,9 @@ export default function HomeClient() {
           <div className="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
             {stats.map((s, i) => (
               <StatCard key={i} {...s} />
+          
             ))}
+          
           </div>
         </div>
       </section>
@@ -435,7 +437,9 @@ function TwoFactoriess({ lang, chinaImg, vietnamImg }) {
             href="/about"
             className="inline-flex items-center justify-center gap-2 rounded-full bg-amber-700 hover:bg-amber-800 text-white px-7 py-3 font-semibold transition"
           >
-            {lang === "en" ? "Learn more about our factories" : "了解更多工厂信息"}
+            {lang === "en"
+              ? "Learn more about our factories"
+              : "了解更多工厂信息"}
             <ArrowRight className="h-5 w-5" />
           </Link>
         </div>
@@ -443,7 +447,6 @@ function TwoFactoriess({ lang, chinaImg, vietnamImg }) {
     </section>
   );
 }
-
 
 function ProductCategories({ lang, data }) {
   if (!data) return null;

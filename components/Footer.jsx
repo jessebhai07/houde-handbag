@@ -152,12 +152,11 @@ export default function Footer() {
       },
       contact: {
         title: f?.contact?.title || "Contact",
-        address:
-          f?.contact?.address ||
-          "123 Factory Street, Industrial Area, Dhaka, Bangladesh",
-        phone: f?.contact?.phone || "+880 10 0000 0000",
-        phoneRaw: f?.contact?.phoneRaw || "+8801000000000",
-        email: f?.contact?.email || "sales@bagworks.com",
+        address: f?.contact?.address || "",
+        address2: f?.contact?.address2 || "",
+        phone: f?.contact?.phone || "",
+        phoneRaw: f?.contact?.phoneRaw || "",
+        email: f?.contact?.email || "",
       },
       bottom: {
         rights: f?.bottom?.rights || "All rights reserved.",
@@ -196,7 +195,6 @@ export default function Footer() {
           - Desktop (lg): 12 columns
         */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12">
-          
           {/* Brand section: Full width on tablet, 5 cols on desktop */}
           <div className="col-span-1 sm:col-span-2 lg:col-span-5 space-y-6">
             <div className="space-y-4">
@@ -241,7 +239,7 @@ export default function Footer() {
               />
             </div>
             <div className="space-y-2 hidden sm:block">
-               {/* Copyright visible on larger screens here, moved to bottom for mobile if needed */}
+              {/* Copyright visible on larger screens here, moved to bottom for mobile if needed */}
               <p className="text-sm text-muted-foreground">
                 © {year} {footerData.brand.name}. {footerData.bottom.rights}
               </p>
@@ -266,11 +264,19 @@ export default function Footer() {
 
               <address className="space-y-4 text-sm text-muted-foreground not-italic">
                 {/* Address */}
-                <div className="flex items-start gap-3">
-                  <MapPin className="h-4 w-4 mt-1 flex-shrink-0 text-primary" />
-                  <span className="leading-relaxed">
-                    {footerData.contact.address}
-                  </span>
+                <div className="flex flex-col items-start gap-3">
+                  <div className="flex  gap-2">
+                    <MapPin className="h-4 w-4 mt-1 flex-shrink-0 text-primary" />
+                    <span className="leading-relaxed">
+                      {footerData.contact.address}
+                    </span>
+                  </div>
+                  <div className="flex  gap-2">
+                    <MapPin className="h-4 w-4 mt-1 flex-shrink-0 text-primary" />
+                    <span className="leading-relaxed">
+                      {footerData.contact.address2}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Phone - Stacked for better mobile view */}
@@ -303,23 +309,23 @@ export default function Footer() {
 
             {/* Business hours */}
             <div className="pt-2 border-t sm:border-t-0 mt-4 sm:mt-0">
-              <p className="text-sm font-semibold mb-2 text-foreground">Business Hours</p>
+              <p className="text-sm font-semibold mb-2 text-foreground">
+                Business Hours
+              </p>
               <div className="text-sm text-muted-foreground space-y-1">
-                <p>Mon - Fri: 9:00 AM - 6:00 PM</p>
-                <p>Saturday: 10:00 AM - 4:00 PM</p>
+                <p>Mon - Sat: 8:00 AM - 6:00 PM</p>
                 <p>Sunday: Closed</p>
               </div>
             </div>
           </div>
 
           {/* Mobile Copyright (Visible only on small screens at the bottom) */}
-           <div className="col-span-1 sm:hidden pt-4 border-t">
-              <p className="text-sm text-muted-foreground text-center">
-                © {year} {footerData.brand.name}.<br />
-                {footerData.bottom.rights}
-              </p>
+          <div className="col-span-1 sm:hidden pt-4 border-t">
+            <p className="text-sm text-muted-foreground text-center">
+              © {year} {footerData.brand.name}.<br />
+              {footerData.bottom.rights}
+            </p>
           </div>
-
         </div>
       </div>
     </footer>

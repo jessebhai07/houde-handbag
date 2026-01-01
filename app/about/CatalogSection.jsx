@@ -16,8 +16,8 @@ const PDF_URL = "https://res.cloudinary.com/drnascc38/image/upload/v1767088868/P
 const catalogContent = {
   header: {
     tag: { 
-      en: "2025 Collection", 
-      zh: "2025 系列" 
+      en: "2026 Collection", 
+      zh: "2026 系列" 
     },
     // Split into two parts to keep the styling (Black vs Amber)
     titlePart1: { 

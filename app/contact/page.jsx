@@ -4,14 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import {
-  MapPin,
-  Phone,
-  Mail,
-  Send,
-  Loader2,
-  ArrowRight,
-} from "lucide-react";
+import { MapPin, Phone, Mail, Send, Loader2, ArrowRight } from "lucide-react";
 import { Toaster, toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -136,14 +129,16 @@ export default function ContactPage() {
 
     window.L.marker([22.9448, 113.6715])
       .addTo(map)
-      .bindPopup(`
+      .bindPopup(
+        `
         <strong>HOUDE HANDBAG</strong><br/>
         广东省东莞市厚街镇桥头第一工业区<br/>
         莞太路厚街段316号5号楼<br/><br/>
         Building 5, No. 316 Wantai Road<br/>
         Qiaotou First Industrial Zone, Houjie Town<br/>
         Dongguan, Guangdong, China
-      `)
+      `
+      )
       .openPopup();
 
     setTimeout(() => map.invalidateSize(), 200);
@@ -153,7 +148,7 @@ export default function ContactPage() {
     <>
       <div className="min-h-screen bg-white text-slate-900 font-sans">
         {/* Hero */}
-        <section className="pt-24 px-6 pb-16  bg-gradient-to-b from-amber-50/80 to-white">
+        <section className="pt-24 px-6 pb-16  bg-linear-to-b from-amber-50/80 to-white">
           <div className="max-w-4xl mx-auto text-center space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm font-medium">
               <span className="relative flex h-2 w-2">
@@ -164,7 +159,7 @@ export default function ContactPage() {
             </div>
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
               {t.hero.titleStart}{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-500 to-orange-600">
                 {t.hero.titleHighlight}
               </span>
             </h1>
@@ -199,27 +194,82 @@ export default function ContactPage() {
                     <h4 className="font-semibold text-lg group-hover:text-emerald-800 transition-colors">
                       {t.contact.whatsapp.title}
                     </h4>
-                    <p className="text-emerald-700/80 text-sm">{t.contact.whatsapp.sub}</p>
+                    <p className="text-emerald-700/80 text-sm">
+                      {t.contact.whatsapp.sub}
+                    </p>
                   </div>
                   <ArrowRight className="ml-auto w-5 h-5 text-emerald-600 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                 </div>
               </a>
 
               {/* Email */}
-              <a href={`mailto:${process.env.NEXT_PUBLIC_EMAIL}`} className="block group">
-                <div className="p-6 rounded-3xl bg-amber-50 border border-amber-100 hover:bg-amber-100/80 transition-all flex items-center gap-5">
+              <div>
+                <div
+                  className="p-6 rounded-3xl bg-amber-50 border border-amber-100 hover:bg-amber-100/80 transition-all flex items-center gap-5"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigator.clipboard.writeText("osksv");
+                    toast.success("WeChat ID copied!");
+                  }}
+                >
                   <div className="bg-white p-3 rounded-2xl text-amber-600 shrink-0">
-                    <Mail className="w-8 h-8" />
+                    <div
+                      className="niftybutton-wechat"
+                      aria-label="wechat button"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "88px",
+                        height: "88px",
+                        background: "rgb(16, 185, 129)",
+                        borderRadius: "35%",
+                        color: "rgb(255, 255, 255)",
+                        transition: "0.3s",
+                        opacity: 1,
+                        padding: "12px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <svg
+                        className="niftybutton-wechat2"
+                        data-donate="true"
+                        data-tag="wec"
+                        data-name="WeChat"
+                        viewBox="0 0 512 512"
+                        preserveAspectRatio="xMidYMid meet"
+                        role="img"
+                        aria-label="wechat"
+                        style={{
+                          display: "block",
+                          fill: "rgb(255, 255, 255)",
+                          width: "53px",
+                          height: "53px",
+                          color: "rgb(255, 255, 255)",
+                        }}
+                      >
+                        <title>WeChat social icon</title>
+                        <g transform="scale(21.333,21.333)">
+                          <path
+                            d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 0 1 .598.082l1.584.926a.272.272 0 0 0 .14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 0 1-.023-.156.49.49 0 0 1 .201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088V8.89c-.135-.01-.27-.027-.407-.03zm-2.53 3.274c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.97-.982zm4.844 0c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.969-.982z"
+                            fill="#ffffff"
+                            style={{ fill: "rgb(255, 255, 255)" }}
+                          />
+                        </g>
+                      </svg>
+                    </div>
                   </div>
                   <div>
                     <h4 className="font-semibold text-lg group-hover:text-amber-800 transition-colors">
-                      {t.contact.email.title}
+                      Wechat / 微信
                     </h4>
-                    <p className="text-amber-700/80 text-sm">{t.contact.email.sub}</p>
+                    <p className="text-amber-700/80 text-sm">
+                    点击复制微信ID / click to copy
+                    </p>
                   </div>
                   <ArrowRight className="ml-auto w-5 h-5 text-amber-600 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                 </div>
-              </a>
+              </div>
 
               {/* Phone */}
               <a href="tel:+8613829146199" className="block group">
@@ -231,7 +281,9 @@ export default function ContactPage() {
                     <h4 className="font-semibold text-lg group-hover:text-sky-800 transition-colors">
                       {t.contact.phone.title}
                     </h4>
-                    <p className="text-sky-700/80 text-sm">{t.contact.phone.sub}</p>
+                    <p className="text-sky-700/80 text-sm">
+                      {t.contact.phone.sub}
+                    </p>
                   </div>
                   <ArrowRight className="ml-auto w-5 h-5 text-sky-600 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                 </div>
@@ -242,12 +294,16 @@ export default function ContactPage() {
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 mt-1 text-amber-500 shrink-0" />
                   <div>
-                    <p className="font-semibold text-slate-900 mb-2">{t.contact.addressLabel}</p>
+                    <p className="font-semibold text-slate-900 mb-2">
+                      {t.contact.addressLabel}
+                    </p>
                     <p className="text-sm font-medium text-slate-700">
                       广东省东莞市厚街镇桥头第一工业区莞太路厚街段316号5号楼
                     </p>
                     <p className="text-sm text-slate-500 mt-2">
-                      Building 5, No. 316 Wantai Road, Qiaotou First Industrial Zone,<br />
+                      Building 5, No. 316 Wantai Road, Qiaotou First Industrial
+                      Zone,
+                      <br />
                       Houjie Town, Dongguan City, Guangdong, China
                     </p>
                   </div>
@@ -264,7 +320,10 @@ export default function ContactPage() {
                 </div>
 
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-6"
+                  >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <FormField
                         control={form.control}
@@ -273,7 +332,11 @@ export default function ContactPage() {
                           <FormItem>
                             <FormLabel>{t.form.nameLabel}</FormLabel>
                             <FormControl>
-                              <Input placeholder={t.form.namePlaceholder} {...field} className="bg-white h-12 rounded-xl" />
+                              <Input
+                                placeholder={t.form.namePlaceholder}
+                                {...field}
+                                className="bg-white h-12 rounded-xl"
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -286,7 +349,12 @@ export default function ContactPage() {
                           <FormItem>
                             <FormLabel>{t.form.emailLabel}</FormLabel>
                             <FormControl>
-                              <Input type="email" placeholder={t.form.emailPlaceholder} {...field} className="bg-white h-12 rounded-xl" />
+                              <Input
+                                type="email"
+                                placeholder={t.form.emailPlaceholder}
+                                {...field}
+                                className="bg-white h-12 rounded-xl"
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -355,7 +423,6 @@ export default function ContactPage() {
                 </div>
               )}
             </div>
-
           </div>
         </section>
       </div>
