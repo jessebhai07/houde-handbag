@@ -10,7 +10,7 @@ const nextConfig = {
       { protocol: "https", hostname: "plus.unsplash.com", pathname: "/**" },
       { protocol: "https", hostname: "cdn.pixabay.com", pathname: "/**" },
       { protocol: "https", hostname: "media.istockphoto.com", pathname: "/**" },
-      { protocol: "https", hostname: "res.cloudinary.com", pathname: "/**" },
+      { protocol: "https", hostname: "res.cloudinary.com", pathname: "**" },
       {
         protocol: "https",
         hostname: "m.media-amazon.com",

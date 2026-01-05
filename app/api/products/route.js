@@ -11,7 +11,7 @@ export const PRESET_CATEGORIES = [
   "Back Pack",
   "Tool Bag",
   "Makeup Bag",
-  "Shoulder Strap",
+  "Tote Bag",
   "Insulated bag",
   "Waterproof Bag",
   "Game Case",

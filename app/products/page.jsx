@@ -1,131 +1,181 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { ZoomIn } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils"; 
-import { galleryData } from "../gallery/gallery";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
+export default function GalleryPage() {
+  const [allImages, setAllImages] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [isPageLoading, setIsPageLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
-const ProductCard = ({ product }) => {
-  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/api/products");
+        if (!res.ok) throw new Error("Failed to fetch");
+        const data = await res.json();
 
-  return (
-    <Card className="group overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow duration-300 bg-background">
-      <CardContent className="p-0">
-        <div className="relative w-full aspect-[4/5] overflow-hidden rounded-lg bg-muted">
-          {/* Skeleton displays only while image is loading */}
-          {isLoading && (
-            <Skeleton className="absolute inset-0 z-10 w-full h-full animate-pulse" />
-          )}
+        const products = data.products || [];
 
-          <Image
-            src={product.url}
-            alt={product.name}
-            fill
-            className={cn(
-              "object-cover transition-all duration-500 ease-in-out group-hover:scale-105",
-              isLoading
-                ? "scale-110 blur-xl grayscale"
-                : "scale-100 blur-0 grayscale-0"
-            )}
-            onLoad={() => setIsLoading(false)}
-            // Performance: Load smaller images for mobile
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            quality={75}
-          />
+        const flattenedImages = products.flatMap((product) =>
+          (product.images || []).map((imgUrl, index) => ({
+            uniqueId: `${product._id}-${index}`,
+            src: imgUrl,
+            category: product.category,
+            parentId: product._id,
+            timestamp: product.createdAt,
+          }))
+        );
 
-          {/* Overlay Text (Optional Style) */}
-          <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/60 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <p className="text-white font-medium text-sm">{product.name}</p>
-          </div>
-        </div>
+        setAllImages(flattenedImages);
 
-        {/* Standard Text Below */}
-        <div className="p-3">
-          <h3 className="text-sm font-medium text-foreground truncate">
-            {product.name}
-          </h3>
-          {/* <p className="text-xs text-muted-foreground">ID: {product.id}</p> */}
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
+        const dynamicCategories = [
+          "All",
+          ...new Set(products.map((p) => p.category)),
+        ];
+        setCategories(
+          data.categories ? ["All", ...data.categories] : dynamicCategories
+        );
+      } catch (error) {
+        console.error("Error fetching gallery:", error);
+      } finally {
+        setIsPageLoading(false);
+      }
+    };
 
-export default function ProductGalleryPage() {
-  // 1. Extract Categories dynamically
-  const categories = useMemo(() => {
-    const uniqueCategories = new Set(galleryData.map((item) => item.name));
-    return ["All", ...Array.from(uniqueCategories)];
+    fetchData();
   }, []);
 
-  // 2. State for active tab
-  const [activeCategory, setActiveCategory] = useState("All");
-
-  // 3. Filter Data
-  const filteredProducts = useMemo(() => {
-    if (activeCategory === "All") return galleryData;
-    return galleryData.filter((item) => item.name === activeCategory);
-  }, [activeCategory]);
+  const visibleImages =
+    selectedCategory === "All"
+      ? allImages
+      : allImages.filter((img) => img.category === selectedCategory);
 
   return (
-    <section className="container mx-auto px-4 py-12">
-      <div className="mb-8 text-center space-y-2">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-          Product Collection
-        </h1>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          Explore our curated gallery of premium bags and accessories.
-        </p>
-      </div>
-
-      <Tabs
-        defaultValue="All"
-        className="w-full space-y-8"
-        onValueChange={setActiveCategory}
-      >
-        <div className=" justify-center px-4 h-40">
-          <TabsList className="flex flex-wrap justify-center gap-2 bg-muted/20 p-2 rounded-lg w-full">
-            {categories.map((category) => (
-              <TabsTrigger
-                key={category}
-                value={category}
-                className="
-                shrink-0 
-                px-4 py-2.5 rounded-md
-                 font-medium transition-all duration-200
-                data-[state=active]:bg-primary data-[state=active]:text-primary-foreground
-                data-[state=active]:shadow-md data-[state=active]:scale-[1.02]
-                border border-transparent 
-                data-[state=inactive]:border-border/40 data-[state=inactive]:hover:bg-muted/30
-                data-[state=inactive]:hover:border-border/60
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
-                min-w-24
-                whitespace-nowrap overflow-hidden text-ellipsis
-                "
-              >
-                {category}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+    <div className="min-h-screen py-10 px-4 md:px-12  mx-auto">
+      <div className="mx-auto max-w-[1800px]">
+        {/* Header */}
+        <div className="flex flex-col gap-4 mb-8 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h1 className="text-4xl font-black tracking-tighter text-primary">
+              Products
+            </h1>
+          </div>
         </div>
 
-        <div className="min-h-[500px]">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+        <Separator className="mb-6" />
+
+        {/* Sticky Filter Bar */}
+        <div className="sticky top-0 z-30 bg-white/90 dark:bg-black/90 backdrop-blur-md py-4 -mx-4 px-4 md:px-0 md:mx-0 mb-6 border-b border-transparent transition-all">
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+            {isPageLoading
+              ? Array.from({ length: 4 }).map((_, i) => (
+                  <Skeleton key={i} className="h-8 w-20 rounded-full" />
+                ))
+              : categories.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={cn(
+                      "text-xs font-bold uppercase tracking-wider px-5 py-2.5 rounded-full transition-all duration-300 border",
+                      selectedCategory === cat
+                        ? "bg-black text-white border-black dark:bg-white dark:text-black scale-105"
+                        : "bg-gray-100 text-gray-500 border-transparent hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-800"
+                    )}
+                  >
+                    {cat}
+                  </button>
+                ))}
           </div>
-          {filteredProducts.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
-              <p>No products found in this category.</p>
+        </div>
+
+        {/* MASONRY-STYLE GRID */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {isPageLoading ? (
+            Array.from({ length: 12 }).map((_, i) => (
+              <GallerySkeleton key={i} />
+            ))
+          ) : visibleImages.length > 0 ? (
+            visibleImages.map((item) => (
+              <GalleryItem key={item.uniqueId} item={item} />
+            ))
+          ) : (
+            <div className="col-span-full py-32 text-center text-muted-foreground">
+              <p>No images found in this category.</p>
+              <Button variant="link" onClick={() => setSelectedCategory("All")}>
+                Reset Gallery
+              </Button>
             </div>
           )}
         </div>
-      </Tabs>
-    </section>
+      </div>
+    </div>
+  );
+}
+
+function GalleryItem({ item }) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  return (
+    // 1. Outer wrapper: No fixed aspect ratio here so it can hold the bottom text on mobile
+    <div className="group relative w-full">
+      
+      {/* 2. Image Wrapper: This holds the Aspect Ratio and the Image */}
+      <div className="relative aspect-3/4 w-full overflow-hidden rounded-t-2xl md:rounded-2xl bg-gray-100 dark:bg-gray-900 shadow-sm transition-all hover:shadow-lg">
+        
+        {/* Loading Skeleton */}
+        {isLoading && (
+          <Skeleton className="absolute inset-0 z-10 h-full w-full" />
+        )}
+
+        {/* The Image */}
+        <Image
+          src={item.src}
+          alt={item.category}
+          fill
+          unoptimized={true}
+          className={cn(
+            "object-cover transition-transform duration-700 ease-in-out will-change-transform",
+            "group-hover:scale-110",
+            isLoading ? "scale-110 blur-xl" : "scale-100 blur-0"
+          )}
+          onLoad={() => setIsLoading(false)}
+        />
+
+        <div className="hidden md:block absolute inset-0">
+          <div className="h-full w-full translate-y-[10px] opacity-0 hover:bg-black/20 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 flex justify-center items-center">
+             <span className="bg-white px-3 py-2 rounded-lg border-2 border-black text-lg font-bold shadow-md">
+                {item.category}
+             </span>
+          </div>
+        </div>
+      </div>
+
+      {/* --- MOBILE VIEW (Small screens only) --- */}
+      {/* Shows outside the image, solid white background */}
+      <div className="block md:hidden ">
+        <div className="w-full bg-white dark:bg-zinc-900 rounded-b-2xl border border-gray-200 dark:border-zinc-800 p-3 text-center shadow-sm">
+          <p className="text-sm font-bold uppercase tracking-wider text-black dark:text-white">
+            {item.category}
+          </p>
+        </div>
+      </div>
+
+    </div>
+  );
+}
+function GallerySkeleton() {
+  return (
+    <div className="aspect-3/4 w-full rounded-xl overflow-hidden relative">
+      <Skeleton className="h-full w-full" />
+    </div>
   );
 }
