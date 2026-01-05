@@ -248,7 +248,7 @@ export default function Footer() {
             <FooterHeading>{f?.contact?.title || "Get in Touch"}</FooterHeading>
             <ul className="space-y-4">
               {/* Phones */}
-              {data.contact.phones.map(
+              {/* {data.contact.phones.map(
                 (phone, idx) =>
                   phone.val && (
                     <ContactItem
@@ -260,7 +260,7 @@ export default function Footer() {
                       {phone.val}
                     </ContactItem>
                   )
-              )}
+              )} */}
               {/* Emails */}
               {data.contact.emails.map(
                 (email, idx) =>

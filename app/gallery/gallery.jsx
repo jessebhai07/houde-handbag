@@ -1,7 +1,7 @@
 import { url } from "zod";
 import { MasonryShuffleGallery } from "./MasonryShuffleGallery";
 
-const galleryData = [
+export const galleryData = [
   {
     id: 1,
     name: "Tote Bag",
