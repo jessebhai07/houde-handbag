@@ -19,7 +19,7 @@ export default function GalleryPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/products");
+        const res = await fetch("/api/products/public");
         if (!res.ok) throw new Error("Failed to fetch");
         const data = await res.json();
 
@@ -75,7 +75,7 @@ export default function GalleryPage() {
 
         {/* Sticky Filter Bar */}
         <div className="sticky top-0 z-30 bg-white/90 dark:bg-black/90 backdrop-blur-md py-4 -mx-4 px-4 md:px-0 md:mx-0 mb-6 border-b border-transparent transition-all">
-          <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+          <div className="flex flex-wrap justify-center items-center gap-2 py-2  overflow-x-auto scrollbar-hide">
             {isPageLoading
               ? Array.from({ length: 4 }).map((_, i) => (
                   <Skeleton key={i} className="h-8 w-20 rounded-full" />
@@ -85,7 +85,7 @@ export default function GalleryPage() {
                     key={cat}
                     onClick={() => setSelectedCategory(cat)}
                     className={cn(
-                      "text-xs font-bold uppercase tracking-wider px-5 py-2.5 rounded-full transition-all duration-300 border",
+                      "text-xs font-bold uppercase tracking-wider px-2 py-2 mx-2 rounded-full transition-all duration-300 border",
                       selectedCategory === cat
                         ? "bg-black text-white border-black dark:bg-white dark:text-black scale-105"
                         : "bg-gray-100 text-gray-500 border-transparent hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-800"
@@ -147,7 +147,6 @@ function GalleryItem({ item }) {
           )}
           onLoad={() => setIsLoading(false)}
         />
-
 
         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col gap-2 items-center justify-center backdrop-blur-[2px]">
           <span className="text-white font-medium text-lg tracking-wide border border-white/20 bg-white/10 px-4 py-2 rounded-full">
