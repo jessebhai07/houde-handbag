@@ -162,6 +162,18 @@ const content = {
       zh: "我们是一家拥有专业制造能力的包袋制造商，拥有自己的现代化工厂和设计团队。专注于为海外客户提供高端定制背包、包袋和手提袋。我们拥有国际声誉，乐意为每一位客户提供最佳服务。我们的认证包括ISO9001、Sedex、BSCI等。目前已服务超过1000位客户，并帮助他们发展业务。如果您需要定制包袋，我们是您的最佳选择！",
     },
   },
+  button: {
+    title: {
+      en: "Contact Us Today",
+      zh: "立即联系我们",
+    },
+  },
+  button1: {
+    title: {
+      en: "WhatsApp Inquire",
+      zh: "WhatsApp咨询",
+    },
+  },
 };
 
 const polishedImages = {
@@ -313,6 +325,8 @@ export default function BagManufacturerPage() {
       logo: content.logo,
       order: content.order,
       about: content.about,
+      button: content.button,
+      button1: content.button1,
     }),
     [isEn]
   );
@@ -644,16 +658,15 @@ export default function BagManufacturerPage() {
               className="text-xl px-5 py-2 flex rounded-2xl justify-center items-center bg-amber-600 hover:bg-amber-500 shadow-2xl"
             >
               <Phone className="mr-4 h-8 w-8" />
-              Contact Us Today
+              {t.button.title[isEn ? "en" : "zh"]}
             </Link>
             <button
-              
               className="text-xl px-5 py-2 flex rounded-2xl justify-center items-center bg-green-400 hover:bg-green-500 shadow-2xl"
               onClick={() => window.open(url, "_blank", "noopener,noreferrer")}
               type="button"
             >
               <MessageCircle className="mr-4 h-8 w-8" />
-              WhatsApp Inquiry
+              {t.button1.title[isEn ? "en" : "zh"]}
             </button>
           </motion.div>
         </div>
