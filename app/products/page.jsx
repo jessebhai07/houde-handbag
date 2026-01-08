@@ -14,6 +14,7 @@ import { useLanguage } from "@/components/LanguageProvider";
 const CATEGORY_TRANSLATIONS = {
   "All": "全部",
   "Back Pack": "双肩包",
+  "EVA Case": "硬壳包",
   "Tool Bag": "工具包",
   "Makeup Bag": "化妆包",
   "Tote Bag": "托特包",
