@@ -22,7 +22,7 @@ const FOOTER_DATA = {
     footer: {
       brand: {
         logoText: "HB",
-        name: "HouDe Handbag Co., Ltd.",
+        name: "HouDe Handbag",
         tagline: "Manufacturing • OEM/ODM • Custom Branding",
         desc: "Consistent quality, precision manufacturing, and scalable production systems ensure reliable handbags that build lasting business relationships.",
       },
@@ -67,7 +67,7 @@ const FOOTER_DATA = {
     footer: {
       brand: {
         logoText: "HB",
-        name: "侯德手袋有限公司",
+        name: "厚德手提包",
         tagline: "制造工厂 • OEM/ODM • 定制品牌",
         desc: "始终如一的品质、精密的制造工艺和可扩展的生产系统，确保了手袋的可靠性，从而建立持久的商业关系。",
       },
