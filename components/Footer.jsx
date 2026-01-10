@@ -210,7 +210,7 @@ export default function Footer() {
             <Link href="/" className="inline-block group">
               <div className="flex items-center gap-2">
                 <div>
-                  <span className="block text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                  <span className="block uppercase text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
                     {f.brand.name}
                   </span>
                 </div>
