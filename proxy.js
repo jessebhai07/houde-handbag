@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 export default function middleware(request) {
   const allowedOrigins = [
     "https://alpha-stack-log-coil.vercel.app",
+    "https://www.houdebag.com"
   ];
 
   const origin = request.headers.get("origin");
